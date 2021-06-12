@@ -9,6 +9,7 @@
 // @grant        GM_openInTab
 // @require      http://code.jquery.com/jquery-latest.min.js
 // ==/UserScript==
+/* globals $ */
 
 (function() {
     'use strict';
