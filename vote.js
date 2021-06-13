@@ -12,11 +12,31 @@
 // ==/UserScript==
 /* globals $ */
 
+function msToDuration(diff) {
+    if (diff < 1000) {
+        return diff.toFixed(2) + "ms";
+    }
+    let sec = diff / 1000;
+    if (sec < 60) {
+        return sec.toFixed(2) + "s";
+    }
+    let min = sec / 60;
+    if (min < 60) {
+        return min.toFixed(2) + "m";
+    }
+    let h = min / 60;
+    if (h < 24) {
+        return h.toFixed(2) + "h";
+    }
+    let d = h / 24;
+    return d.toFixed(2) + "d";
+}
+
 (function() {
     'use strict';
     console.log("vote started");
 
-    let date = new Date().toISOString().slice(0,10);
+    let date = new Date();
     console.log("date", date);
 
     let key = "elysium_vote";
@@ -29,22 +49,27 @@
         let href = $(this).attr("href");
         console.log(href, "[start]");
         if (typeof href !== "string") {
-            console.log(href, "skipped")
+            console.log(href, "skipped because of invalid href type");
             return
         }
         if (href === "javascript:void(0)") {
-            console.log(href, "skipped")
+            console.log(href, "skipped because of invalid href value");
             return;
         }
-        let latest = vote[href]
-        console.log(href, "[latest]", latest);
-        if (latest === date) {
-            console.log(href, "already voted")
-            return
+        let latest = vote[href];
+        console.log(href, "[latest]", new Date(latest));
+        if (typeof latest === "number") {
+            let diff = date.getTime() - latest;
+            console.log(href, "[time diff]", msToDuration(diff));
+            if (diff < 24 * 60 * 60 * 1000) {
+                console.log(href, "skipped because of cd");
+                return;
+            }
         }
         $.get(href).done(function(data) {
-            console.log(href, "[success]");
-            vote[href] = date;
+            let now = new Date()
+            console.log(href, "[success]", now);
+            vote[href] = now.getTime();
             GM_setValue(key, vote);
         }).fail(function() {
             console.log(href, "[failed]");
