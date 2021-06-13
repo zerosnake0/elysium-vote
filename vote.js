@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Elysium Vote
 // @namespace    http://github.com/zerosnake0/elysium-vote
-// @version      0.1
+// @version      0.2
 // @description  auto vote
 // @author       zerosnake0
 // @match        https://cp.elysium-project.org/vote
