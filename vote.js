@@ -6,24 +6,23 @@
 // @author       zerosnake0
 // @match        https://cp.elysium-project.org/vote
 // @icon         https://www.google.com/s2/favicons?domain=elysium-project.org
-// @grant        GM_openInTab
 // @require      http://code.jquery.com/jquery-latest.min.js
 // ==/UserScript==
 /* globals $ */
 
 (function() {
     'use strict';
+    console.log("vote started");
     $("a.btn.btn-low-green").each(function() {
         let href = $(this).attr("href");
-        console.log(href);
+        console.log(href, "[start]");
         if (href === "javascript:void(0)") {
             return;
         }
-        let tab = GM_openInTab(href, {
-            active: false
+        $.get(href).done(function(data) {
+            console.log(href, "[success]");
+        }).fail(function() {
+            console.log(href, "[failed]");
         });
-        setTimeout(function() {
-            tab.close();
-        }, 1000);
     });
 })();
